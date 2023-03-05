@@ -1,0 +1,66 @@
+version: '3.7'
+services:
+  test-nginx:
+    image: test-nginx:${IMAGE_TAG}
+    container_name: test-app-nginx
+    ports:
+      - ${TEST_WEB_PORT}:80
+    volumes:
+      - .:/app
+    depends_on:
+      - test-php-fpm
+      - test-redis
+
+  test-redis:
+    image: redis:3.2.10-alpine
+    container_name: test-app-redis
+    ports:
+      - 63791:6379
+
+  test-mariadb:
+    image: mariadb:10.1.32
+    container_name: test-app-mariadb
+    environment:
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+    volumes:
+      - ${TEST_DB_PATH}:/var/lib/mysql
+      - ./docker/development/mariadb/initdb.d:/docker-entrypoint-initdb.d
+    ports:
+      - 33061:3306
+
+  test-php-fpm:
+    image: test-php-fpm:${IMAGE_TAG}
+    container_name: test-app-php-fpm
+    volumes:
+      - .:/app
+
+  test-php-cli:
+    image: test-php-cli:${IMAGE_TAG}
+    container_name: test-app-php-cli
+    volumes:
+      - .:/app
+
+  test-node-cli:
+    image: node:12.18.2-alpine
+    container_name: test-app-node-cli
+    volumes:
+      - .:/app
+    working_dir: /app
+  
+  test-sphinx:
+    image: jc21/sphinxsearch
+    container_name: test-app-sphinx
+    ports:
+      - 9306:9306
+      - 9312:9312
+    volumes:
+      - "./docker/development/sphinx/sphinx.conf:/etc/sphinx/sphinx.conf"
+      - "./docker/development/sphinx/data:/var/lib/sphinx"
+    depends_on:
+      - test-mariadb
+networks:
+  default:
+    name: test-dev_default
