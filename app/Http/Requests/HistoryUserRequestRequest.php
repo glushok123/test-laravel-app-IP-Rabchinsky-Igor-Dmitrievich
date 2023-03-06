@@ -52,4 +52,16 @@ class HistoryUserRequestRequest extends FormRequest
             //
         ];
     }
+
+    /**
+     * @return array
+     */
+    protected function prepareForValidation()
+    {
+        $user = backpack_auth()->user();
+        
+        $this->merge([
+            'user_id' => $user->id,
+        ]);
+    }
 }

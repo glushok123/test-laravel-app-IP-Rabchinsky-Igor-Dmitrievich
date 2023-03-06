@@ -27,15 +27,17 @@ class ProductCrudController extends CrudController
     public function setup()
     {
         $user = backpack_auth()->user();
+
         if ($user->type == 0) {
             abort(404);
         }
+
         CRUD::setModel(\App\Models\Product::class);
         CRUD::setRoute(config('backpack.base.route_prefix') . '/product');
         CRUD::setEntityNameStrings('товар', 'Товары');
-        
-        $this->crud->addClause('where', 'user_id', '=', $user->id);
 
+        $this->crud->addClause('where', 'user_id', '=', $user->id);
+        //$this->crud->addClause('orWhere', 'min_price', '>', 0);
     }
 
     /**
@@ -46,21 +48,26 @@ class ProductCrudController extends CrudController
      */
     protected function setupListOperation()
     {
-        CRUD::column('name');
-        CRUD::column('min_price');
-        CRUD::column('max_price');
+        CRUD::addColumn([
+            'name' => 'name',
+            'label' => 'Название'
+        ]);
+
+        CRUD::addColumn([
+            'name' => 'min_price',
+            'label' => 'цена (min)',
+        ]);
+
+        CRUD::addColumn([
+            'name' => 'max_price',
+            'label' => 'цена (max)',
+        ]);
 
         CRUD::addColumn([
             'name' => 'type_text',
             'label' => 'Состояние',
             'type' => 'text'
         ]);
-
-        /**
-         * Columns can be defined using the fluent syntax or array syntax:
-         * - CRUD::column('price')->type('number');
-         * - 
-         */
     }
 
     /**
@@ -73,10 +80,21 @@ class ProductCrudController extends CrudController
     {
         CRUD::setValidation(ProductRequest::class);
         $user = backpack_auth()->user();
-        CRUD::field('name');
-        CRUD::field('min_price');
-        CRUD::field('max_price');
-        //CRUD::field('type');
+
+        CRUD::addField([
+            'name' => 'name',
+            'label' => 'Название'
+        ]);
+
+        CRUD::addField([
+            'name' => 'min_price',
+            'label' => 'цена (min)',
+        ]);
+
+        CRUD::addField([
+            'name' => 'max_price',
+            'label' => 'цена (max)',
+        ]);
 
         CRUD::addField([
             'name' => 'type',
@@ -89,11 +107,6 @@ class ProductCrudController extends CrudController
             'value' => $user->id,
             'type' => 'hidden',
         ]);
-        /**
-         * Fields can be defined using the fluent syntax or array syntax:
-         * - CRUD::field('price')->type('number');
-         * - CRUD::addField(['name' => 'price', 'type' => 'number'])); 
-         */
     }
 
     /**

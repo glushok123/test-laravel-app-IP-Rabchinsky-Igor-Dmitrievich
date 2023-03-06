@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Requests\HistoryUserRequestRequest;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
+use App\Models\Product;
 
 /**
  * Class HistoryUserRequestCrudController
@@ -34,6 +35,19 @@ class HistoryUserRequestCrudController extends CrudController
         if ($user->type == 0) {
             $this->crud->addClause('where', 'user_id', '=', $user->id);
         }
+
+        if ($user->type == 1) {
+            $products = Product::where('user_id', $user->id)->get();
+
+            foreach($products as $product) {
+                $this->crud->query->orWhere(function($query) use ($product) { 
+                    $query->where('name', 'like', '%' . $product->name . '%');
+                    $query->where('type', '=', $product->type);
+                    $query->whereBetween('min_price', [$product->min_price, $product->max_price]);
+                    $query->orWhereBetween('max_price', [$product->min_price, $product->max_price]);
+                });
+            }
+        }
     }
 
     /**
@@ -44,16 +58,26 @@ class HistoryUserRequestCrudController extends CrudController
      */
     protected function setupListOperation()
     {
-        CRUD::column('name');
-        CRUD::column('min_price');
-        CRUD::column('max_price');
-        CRUD::column('type');
+        CRUD::addColumn([
+            'name' => 'name',
+            'label' => 'Название'
+        ]);
 
-        /**
-         * Columns can be defined using the fluent syntax or array syntax:
-         * - CRUD::column('price')->type('number');
-         * - CRUD::addColumn(['name' => 'price', 'type' => 'number']); 
-         */
+        CRUD::addColumn([
+            'name' => 'min_price',
+            'label' => 'цена (min)',
+        ]);
+
+        CRUD::addColumn([
+            'name' => 'max_price',
+            'label' => 'цена (max)',
+        ]);
+
+        CRUD::addColumn([
+            'name' => 'type_text',
+            'label' => 'Состояние',
+            'type' => 'text'
+        ]);
     }
 
     /**
@@ -65,18 +89,34 @@ class HistoryUserRequestCrudController extends CrudController
     protected function setupCreateOperation()
     {
         CRUD::setValidation(HistoryUserRequestRequest::class);
+        $user = backpack_auth()->user();
 
-        CRUD::field('name');
-        CRUD::field('min_price');
-        CRUD::field('max_price');
-        CRUD::field('type');
-        CRUD::field('user_id');
+        CRUD::addField([
+            'name' => 'name',
+            'label' => 'Название'
+        ]);
 
-        /**
-         * Fields can be defined using the fluent syntax or array syntax:
-         * - CRUD::field('price')->type('number');
-         * - CRUD::addField(['name' => 'price', 'type' => 'number'])); 
-         */
+        CRUD::addField([
+            'name' => 'min_price',
+            'label' => 'цена (min)',
+        ]);
+
+        CRUD::addField([
+            'name' => 'max_price',
+            'label' => 'цена (max)',
+        ]);
+
+        CRUD::addField([
+            'name' => 'type',
+            'label' => 'Б/У',
+            'type' => 'checkbox',
+        ]);
+
+        CRUD::addField([
+            'name' => 'user_id',
+            'value' => $user->id,
+            'type' => 'hidden',
+        ]);
     }
 
     /**

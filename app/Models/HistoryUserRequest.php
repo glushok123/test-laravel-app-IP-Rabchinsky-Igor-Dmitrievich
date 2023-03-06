@@ -26,4 +26,16 @@ class HistoryUserRequest extends Model
         'type', 
         'user_id', 
     ];
+
+    /**
+     * @return string
+     */
+    public function getTypeTextAttribute(): string
+    {
+        if ($this->type == 0) {
+            return 'Новый';
+        }
+
+        return 'Б/У';
+    }
 }

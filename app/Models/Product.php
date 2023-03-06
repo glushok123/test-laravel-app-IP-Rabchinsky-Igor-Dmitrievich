@@ -27,13 +27,12 @@ class Product extends Model
         'user_id',
     ];
 
-
     /**
      * @return string
      */
     public function getTypeTextAttribute(): string
     {
-        if ($this->type === 0) {
+        if ($this->type == 0) {
             return 'Новый';
         }
 
