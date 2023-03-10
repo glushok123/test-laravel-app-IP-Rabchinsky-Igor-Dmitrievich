@@ -1,0 +1,133 @@
+<?php
+
+namespace App\Services\UrlPage;
+
+use App\Repository\UrlPage\UrlPageRepository;
+use App\Services\Base\BaseModelService;
+use App\Models\UrlPage;
+use App\Models\Configuration;
+
+class UrlPageService extends BaseModelService
+{
+    public $urlLength = 10;
+    public $string = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    public $url;
+    public $generateUrl = [];
+    public $model;
+    public $modelParentPayLevel;
+
+    /**
+     * @see BaseModelService
+     */
+    protected static $repositoryClass = UrlPageRepository::class;
+
+    public function setProperties(string $url): void
+    {
+        $this->url = $url;
+        $this->repository->setProperties($url);
+        $this->model = UrlPage::where('url', $url)->first();
+    }
+
+    public function generateUniqueUrl(int $count = 1, string $parentUrl = ''): void
+    {
+        $countGenerateUrl = 0;
+        $this->generateUrl = [];
+
+        while ($countGenerateUrl != $count) {
+            $generate = false;
+
+            while ($generate == false) {
+                $url = substr(str_shuffle($this->string), 0, $this->urlLength);
+
+                if (UrlPage::where('url', $url)->exists() == false) {
+                    $model = new UrlPage();
+                    $model->url = $url;
+                    $model->parent_url = $parentUrl;
+                    $model->save();
+
+                    $generate = true;
+                    $this->generateUrl[] = $url;
+                    $countGenerateUrl = $countGenerateUrl + 1;
+                }
+            }
+        }
+    }
+
+    /**
+     * Телефон активного пользователя
+     * 
+     * @return string|null
+     */
+    public function getPhone(): ?string
+    {
+        return $this->model->phone;
+    }
+
+    /**
+     * Ссылка активного пользователя
+     * 
+     * @return string
+     */
+    public function getUrl(): string
+    {
+        return $this->url;
+    }
+
+    /**
+     * Общее количество ссылок
+     * 
+     * @return int
+     */
+    public function getCountUrl(): int
+    {
+        return $this->repository->getCountUrl();
+    }
+
+    /**
+     * Общее количество активированных ссылок
+     * 
+     * @return int
+     */
+    public function getCountActiveUrl(): int
+    {
+        return $this->repository->getCountActiveUrl();
+    }
+
+    /**
+     * Количество участников, в ветках которых полностью активирован уровень PAYLEVEL
+     * 
+     * @return int
+     */
+    public function getCountActivePayLevelUrl(): int
+    {
+        return $this->url;
+    }
+
+    public function getChildren()
+    {
+        return UrlPage::where('parent_url', $this->url)->get();
+    }
+    
+    /**
+     * Получение телефона пользователя уровня payLevel для оплаты
+     * 
+     * @return string|null
+     */
+    public function getPhoneParentByPayment(): ?string
+    {
+        $payLevel = (int) Configuration::where('name', 'PAYLEVEL')->value('value');
+        $count = 1;
+        $url_parent = $this->model->parent_url;
+
+        while ($count != $payLevel) {
+            if (UrlPage::where('url', $url_parent)->exists() == true) {
+                $url_parent =  UrlPage::where('url', $url_parent)->value('url');
+            }
+            $count = $count + 1;
+        }
+
+        $modelParentPayLevel = UrlPage::where('url', $url_parent)->first();
+
+        return $modelParentPayLevel->phone;
+    }
+}
