@@ -2,6 +2,10 @@
 
 @section('content')
 
+@if (backpack_auth()->guest())
+    <script>window.location = "{{ backpack_url('login')}}"</script>
+@endif
+
 <style>
     .custom-border-col-right{
         border-right: 2px solid #ff8800;
@@ -435,7 +439,7 @@
                                 element[0],
                                 '<button type="button" class="btn btn-primary copy" data-url="' + document.location.origin + "/unique-id/" + element[0] + '">Копировать</button>', 
                                 'Будет доступно после обновления страницы', 
-                                '<textarea class="form-control" rows="2" placeholder="Комментарий" id="' + element[0] + '-comment"></textarea>', 
+                                '<textarea class="form-control comment" rows="2" placeholder="Комментарий" id="' + element[0] + '-comment"></textarea>', 
                                 '<button type="button" class="btn btn-primary save-change-children-url" disabled>Сохранить</button>'
                             ])
                             .draw(false)

@@ -579,19 +579,18 @@
                                 '',
                                 '',
                                 element[0],
-                                '<button type="button" class="btn btn-primary">Копировать</button>', 
-                                '<button type="button" class="btn btn-primary">Поделиться</button>', 
-                                '<textarea class="form-control" rows="2" placeholder="Комментарий"></textarea>', 
+                                '<button type="button" class="btn btn-primary copy" data-url="' + document.location.origin + "/unique-id/" + element[0] + '">Копировать</button>', 
+                                '<button type="button" class="btn btn-primary">Будет доступно после обновления страницы</button>', 
+                                '<textarea class="form-control comment" rows="2" placeholder="Комментарий" id="' + element[0] + '-comment"></textarea>', 
                                 '<button type="button" class="btn btn-primary save-change-children-url" disabled>Сохранить</button>'
                             ])
                             .draw(false)
                             .node();
 
                         $( rowNode )
-                            .css( 'color', 'red' )
-                            .animate( { color: 'black' } );
-                        table.order( [ [0,'desc'] ] );
-
+                            .css('color', 'red')
+                            .animate({ color: 'black' });
+                        table.order([[0,'desc']]);
                     }
                 },
                 error: function (jqXHR, exception) {

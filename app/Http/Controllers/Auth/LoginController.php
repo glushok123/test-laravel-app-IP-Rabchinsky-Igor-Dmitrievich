@@ -44,6 +44,7 @@ class LoginController extends Controller
             : backpack_url('login');
 
         // Redirect here after successful login.
+
         $this->redirectTo = property_exists($this, 'redirectTo') ? $this->redirectTo
             : backpack_url('dashboard');
 

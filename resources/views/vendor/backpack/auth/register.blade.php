@@ -1,5 +1,8 @@
 @extends(backpack_view('layouts.plain'))
 
+{{
+    abort(404)
+}}
 @section('content')
     <div class="row justify-content-center">
         <div class="col-12 col-md-8 col-lg-4">
