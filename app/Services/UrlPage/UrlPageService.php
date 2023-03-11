@@ -26,6 +26,8 @@ class UrlPageService extends BaseModelService
         $this->url = $url;
         $this->repository->setProperties($url);
         $this->model = UrlPage::where('url', $url)->first();
+        $this->getParentByPayment();
+       //dd($this->modelParentPayLevel);
     }
 
     public function generateUniqueUrl(int $count = 1, string $parentUrl = ''): void
@@ -46,13 +48,16 @@ class UrlPageService extends BaseModelService
                     $model->save();
 
                     $generate = true;
-                    $this->generateUrl[] = $url;
+                    $this->generateUrl[] = [$url, new \DateTime()];
                     $countGenerateUrl = $countGenerateUrl + 1;
                 }
             }
         }
     }
-
+    public function getUniqueUrl(): array
+    {
+        return $this->generateUrl;
+    }
     /**
      * Телефон активного пользователя
      * 
@@ -109,25 +114,53 @@ class UrlPageService extends BaseModelService
     }
     
     /**
+     * Получение модели пользователя уровня payLevel для оплаты
+     * 
+     * @return void
+     */
+    public function getParentByPayment(): void
+    {
+        $payLevel = (int) Configuration::where('name', 'PAYLEVEL')->value('value');
+        $payLevel = $payLevel - 1;
+        $count = 1;
+        $url_parent = $this->model->parent_url;
+
+        while ($count != $payLevel) {
+            if (UrlPage::where('url', $url_parent)->exists() == true) {
+                $urlParent = UrlPage::where('url', $url_parent)->value('parent_url');
+
+                if ($urlParent == null) {
+                    break;
+                }
+
+                $url_parent = $urlParent;
+            }
+            else{
+                break;
+            }
+            $count = $count + 1;
+        }
+
+        $this->modelParentPayLevel = UrlPage::where('url', $url_parent)->first();
+    }
+
+    /**
      * Получение телефона пользователя уровня payLevel для оплаты
      * 
      * @return string|null
      */
     public function getPhoneParentByPayment(): ?string
     {
-        $payLevel = (int) Configuration::where('name', 'PAYLEVEL')->value('value');
-        $count = 1;
-        $url_parent = $this->model->parent_url;
+        return $this->modelParentPayLevel->phone;
+    }
 
-        while ($count != $payLevel) {
-            if (UrlPage::where('url', $url_parent)->exists() == true) {
-                $url_parent =  UrlPage::where('url', $url_parent)->value('url');
-            }
-            $count = $count + 1;
-        }
-
-        $modelParentPayLevel = UrlPage::where('url', $url_parent)->first();
-
-        return $modelParentPayLevel->phone;
+    /**
+     * Получение телефона пользователя уровня payLevel для оплаты
+     * 
+     * @return string|null
+     */
+    public function getPaymentMethodParentByPayment(): ?string
+    {
+        return $this->modelParentPayLevel->payment_method;
     }
 }

@@ -24,3 +24,7 @@ Route::get('/unique-id/{url}', 'App\Http\Controllers\UrlPageController@show');
 Route::post('/change-attribute', 'App\Http\Controllers\UrlPageController@change');
 Route::post('/change-config', 'App\Http\Controllers\ConfigurationController@change');
 Route::post('/generate-url', 'App\Http\Controllers\UrlPageController@generateUrl');
+Route::post('/generate-url-for-user', 'App\Http\Controllers\UrlPageController@generateUrlForUser');
+Route::post('/active-url', 'App\Http\Controllers\UrlPageController@activeUrl');
+Route::post('/save-comment-url', 'App\Http\Controllers\UrlPageController@saveCommentUrl');
+Route::post('/start-init', 'App\Http\Controllers\UrlPageController@startInit');

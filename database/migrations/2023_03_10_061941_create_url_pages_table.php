@@ -23,6 +23,7 @@ return new class extends Migration
             $table->string('work')->index()->nullable()->comment('Работа');
             $table->string('floor')->index()->nullable()->comment('Пол');
             $table->text('payment_method')->nullable()->comment('Способы оплаты');
+            $table->text('comment')->nullable()->comment('Комментарий');
             $table->dateTime('time_first_open_url')->nullable()->comment('Дата и время первого открытия ссылки');
             $table->dateTime('time_active')->nullable()->comment('Дата и время нажатия кнопки "Активации"');
             $table->dateTime('time_payment')->nullable()->comment('Дата и время нажатия кнопки "Оплатил"');
