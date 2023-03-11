@@ -21,15 +21,29 @@ class UrlPageService extends BaseModelService
      */
     protected static $repositoryClass = UrlPageRepository::class;
 
+    /**
+     * Инициализация параметров
+     * 
+     * @param string $url
+     * 
+     * @return void
+     */
     public function setProperties(string $url): void
     {
         $this->url = $url;
         $this->repository->setProperties($url);
         $this->model = UrlPage::where('url', $url)->first();
         $this->getParentByPayment();
-       //dd($this->modelParentPayLevel);
     }
 
+    /**
+     * генерация уникального url
+     * 
+     * @param int $count
+     * @param string $parentUrl
+     * 
+     * @return void
+     */
     public function generateUniqueUrl(int $count = 1, string $parentUrl = ''): void
     {
         $countGenerateUrl = 0;
@@ -54,6 +68,12 @@ class UrlPageService extends BaseModelService
             }
         }
     }
+
+    /**
+     * Список сгенерированных url
+     * 
+     * @return array
+     */
     public function getUniqueUrl(): array
     {
         return $this->generateUrl;
@@ -112,7 +132,7 @@ class UrlPageService extends BaseModelService
     {
         return UrlPage::where('parent_url', $this->url)->get();
     }
-    
+
     /**
      * Получение модели пользователя уровня payLevel для оплаты
      * 

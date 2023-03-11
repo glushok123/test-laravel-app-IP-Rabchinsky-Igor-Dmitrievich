@@ -44,9 +44,7 @@ class UrlPageController extends Controller
 
         $service = UrlPageService::getInstance();
         $serviceConfigurations = ConfigurationService::getInstance();
-
         $service->setProperties($url);
-
 
         $model = UrlPage::where('url', $url)->first();
 
@@ -82,18 +80,23 @@ class UrlPageController extends Controller
             }
             $model->phone = $request->phone;
         }
+
         if (request()->has('city')) {
             $model->city = $request->city;
         }
+
         if (request()->has('age')) {
             $model->age = $request->age;
         }
+
         if (request()->has('work')) {
             $model->work = $request->work;
         }
+
         if (request()->has('floor')) {
             $model->floor = $request->floor;
         }
+
         if (request()->has('payment_method')) {
             $model->payment_method = $request->payment_method;
         }
@@ -123,8 +126,7 @@ class UrlPageController extends Controller
             'array' => $array,
         ]);
     }
-    
-    
+
     /**
      * Генерация url для пользователей
      * 
@@ -150,7 +152,14 @@ class UrlPageController extends Controller
             'array' => $array,
         ]);
     }
-    
+
+    /**
+     * Сохранение комментария дочернего url
+     * 
+     * @param Request $request
+     * 
+     * @return JsonResponse
+     */
     public function saveCommentUrl(Request $request): JsonResponse
     {
         $model = UrlPage::where('url', $request->url)->first();
@@ -181,20 +190,27 @@ class UrlPageController extends Controller
             'status' => 'success',
         ]);
     }
-    
+
+    /**
+     * Кнопка СТАРТ, очистка таблицы
+     * 
+     * @param Request $request
+     * 
+     * @return JsonResponse
+     */
     public function startInit(Request $request): JsonResponse
     {
-        //$service = UrlPageService::getInstance();
-       // $service->startInit();
-       $model = UrlPage::where('url', $this->adminUrl)->first();
-       UrlPage::truncate();
-       $phone = $model->phone;
-       $payment_method = $model->payment_method;
-       $model = new UrlPage();
-       $model->url = $this->adminUrl;
-       $model->phone = $phone;
-       $model->payment_method = $payment_method;
-       $model->save();
+        $model = UrlPage::where('url', $this->adminUrl)->first();
+        $phone = $model->phone;
+        $payment_method = $model->payment_method;
+
+        UrlPage::truncate();
+
+        $model = new UrlPage();
+        $model->url = $this->adminUrl;
+        $model->phone = $phone;
+        $model->payment_method = $payment_method;
+        $model->save();
 
         return response()->json([
             'status' => 'success',
