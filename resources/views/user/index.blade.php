@@ -2,29 +2,6 @@
 
 @section('content')
 
-<style>
-    .custom-border-col-right{
-        border-right: 2px solid #ff8800;
-    }
-    .custom-border-col{
-        border: 2px solid #ff8800;
-        padding: 10px;
-    }
-    .hidden{
-        display:none;
-    }
-    .border-payment{
-        border-radius: 40px;
-
-    }
-    #button-payment{
-        margin: 10px;
-    }
-    .time-active{
-        background-color: #f0db73bd !important;
-    }
-</style>
-
 <div class='container'>
     <div class='row text-center justify-content-center'>
         <div class='col-12 col-sm-12 col-md-4 col-lg-4 col-xl-4  custom-border-col-right'>
@@ -169,9 +146,7 @@
                 <tbody>
                     @foreach($service->getChildren() as $item)
                         <tr id='{{ $item->url }}'
-                            @if ($item->time_active != null)
-                                class='time-active'
-                            @endif
+                            class='{{ $item->getClassColor() }}'
                         >
                             <td>{{ $item->created_at }}</td>
                             <td>{{ $item->time_first_open_url }}</td>
@@ -206,8 +181,6 @@
 @endsection
 
 @section('after_scripts')
-
-
     <script>
         $("#phone").mask("+7 (999) 999-99-99");
 

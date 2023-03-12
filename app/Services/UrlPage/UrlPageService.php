@@ -15,6 +15,8 @@ class UrlPageService extends BaseModelService
     public $generateUrl = [];
     public $model;
     public $modelParentPayLevel;
+    public $countPayLevel = 0;
+    public $payLevel;
 
     /**
      * @see BaseModelService
@@ -182,5 +184,38 @@ class UrlPageService extends BaseModelService
     public function getPaymentMethodParentByPayment(): ?string
     {
         return $this->modelParentPayLevel->payment_method;
+    }
+
+    /**
+     * Количество участников, в ветках которых полностью активирован уровень PAYLEVEL
+     * 
+     * @return int
+     */
+    public function getCountPayLevel(): int
+    {
+        $this->countPayLevel = 0;
+        $this->payLevel = (int) Configuration::where('name', 'PAYLEVEL')->value('value');
+
+        UrlPage::chunk(100, function($items) {
+            foreach ($items as $item) {
+                $count = 0;
+                $level = $item;
+                while (true) {
+                    if ($level->time_payment != null) {
+                        $level = UrlPage::where('parent_url', $level->url)->first();
+                        $count = $count + 1;
+                        if ($count == $this->payLevel) {
+                            $this->countPayLevel = $this->countPayLevel + 1;
+                            break;
+                        }
+                    }
+                    else{
+                        break;
+                    }
+                }
+            }
+        });
+
+        return $this->countPayLevel;
     }
 }

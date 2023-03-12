@@ -5,6 +5,6 @@
 
 @endsection
 
-@section('description', 'Тестовое задание')
-@section('keywords', 'Тестовое задание')
-@section('title', 'Тестовое задание')
+@section('description', 'AMISAMI')
+@section('keywords', 'AMISAMI')
+@section('title', 'AMISAMI')

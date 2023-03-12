@@ -1,0 +1,22 @@
+.custom-border-col-right{
+    border-right: 2px solid #ff8800;
+}
+.custom-border-col{
+    border: 2px solid #ff8800;
+    padding: 10px;
+}
+.time-active-children-one-level{
+    background-color: #f0db73bd !important;
+}
+.time-active-children-two-level{
+    background-color: #78eb8b !important;
+}
+.hidden{
+    display:none;
+}
+.border-payment{
+    border-radius: 40px;
+}
+#button-payment{
+    margin: 10px;
+}

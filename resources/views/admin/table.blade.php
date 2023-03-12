@@ -17,9 +17,7 @@
             <tbody>
                 @foreach($service->getChildren() as $item)
                     <tr id='{{ $item->url }}'
-                        @if ($item->time_active != null)
-                            class='time-active'
-                        @endif
+                        class='{{ $item->getClassColor() }}'
                     >
                         <td>{{ $item->created_at }}</td>
                         <td>{{ $item->time_first_open_url }}</td>

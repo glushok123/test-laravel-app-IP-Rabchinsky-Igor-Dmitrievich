@@ -37,7 +37,7 @@ class UserRequest extends FormRequest
     public function attributes()
     {
         return [
-            //
+            'password' => bcrypt($this->password)
         ];
     }
 
@@ -51,5 +51,13 @@ class UserRequest extends FormRequest
         return [
             //
         ];
+    }
+
+    protected function prepareForValidation()
+    {
+        $this->merge([
+            'password' => bcrypt($this->password)
+        ]);
+
     }
 }

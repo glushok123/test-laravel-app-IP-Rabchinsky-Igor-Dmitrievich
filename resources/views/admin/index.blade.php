@@ -6,19 +6,6 @@
     <script>window.location = "{{ backpack_url('login')}}"</script>
 @endif
 
-<style>
-    .custom-border-col-right{
-        border-right: 2px solid #ff8800;
-    }
-    .custom-border-col{
-        border: 2px solid #ff8800;
-        padding: 10px;
-    }
-    .time-active{
-        background-color: #f0db73bd !important;
-    }
-</style>
-
 <div class='container'>
     <div class='row text-center justify-content-center'>
         <div class='col-12 col-sm-12 col-md-4 col-lg-4 col-xl-4  custom-border-col-right'>
@@ -42,7 +29,7 @@
                <div class="row">
                     <span> Всего ссылок: {{ $service->getCountUrl() }}</span>
                     <span> Всего ссылок автивировано: {{ $service->getCountActiveUrl() }}</span>
-                    <span> Количество участников, в ветках которых полностью активирован уровень PAYLEVEL : 0</span>
+                    <span> Количество участников, в ветках которых полностью активирован уровень PAYLEVEL : {{ $service->getCountPayLevel() }}</span>
                </div>
             </div>
         </div>

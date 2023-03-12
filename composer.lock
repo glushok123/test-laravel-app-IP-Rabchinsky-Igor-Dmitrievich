@@ -8,16 +8,16 @@
     "packages": [
         {
             "name": "backpack/crud",
-            "version": "5.5.1",
+            "version": "5.5.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Laravel-Backpack/CRUD.git",
-                "reference": "2706ccce24c9431f588d29672e05cde2205352a5"
+                "reference": "053707c1d86f9540ad4ea6c012e3d9464cf9e5a0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Laravel-Backpack/CRUD/zipball/2706ccce24c9431f588d29672e05cde2205352a5",
-                "reference": "2706ccce24c9431f588d29672e05cde2205352a5",
+                "url": "https://api.github.com/repos/Laravel-Backpack/CRUD/zipball/053707c1d86f9540ad4ea6c012e3d9464cf9e5a0",
+                "reference": "053707c1d86f9540ad4ea6c012e3d9464cf9e5a0",
                 "shasum": ""
             },
             "require": {
@@ -94,7 +94,7 @@
                 "read",
                 "update"
             ],
-            "time": "2023-03-01T06:52:36+00:00"
+            "time": "2023-03-07T17:17:25+00:00"
         },
         {
             "name": "brick/math",
