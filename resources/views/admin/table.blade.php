@@ -1,6 +1,6 @@
 <section>
-    <div class='row'>
-        <table id="jquery-datatable-example-no-configuration" class="display" style="width:100%">
+    <div class='row table-responsive-sm'>
+        <table id="jquery-datatable-example-no-configuration" class="display table-sm table" style="width:100%">
             <thead>
                 <tr>
                     <th>Дата создания</th>
